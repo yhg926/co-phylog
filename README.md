@@ -1,5 +1,4 @@
-co-phylog tools set
-===================
+#co-phylog tools set
 
 Please cite:
 “Co-phylog: an assembly-free phylogenomic approach for closely related organisms
@@ -7,13 +6,14 @@ H Yi, L Jin
 Nucleic acids research 41 (7), e75-e75”
 
 ======INSTALL AND USAGE========
-1. Compile:
+
+1.	Compile:
 gcc fasta2co.c -O6 -Wall -o fasta2co ;
 gcc fastq2co.c -O6 -Wall -o fastq2co ;
 gcc co2dist2.c -O6 -Wall -o co2dist  ;
 gcc readco.c  -Wall -o readco ;
 
-2.Usage :
+2.	Usage :
 fasta2co : Convert fasta file to co file ;
 Usage : ./fasta2co <*.fasta> <*.co>
 
@@ -35,9 +35,11 @@ nwkrename.pl
 Usage: perl ./Pl/nwkrename.pl [outtree/outfile] > [output file]
 
 EXAMPLE:
+
 	tar xzvf example_brucella.tar.gz
 	cp example_brucella/* algorithm/Genomes/
     cd algorithm
+	
 	1) Build cofile files using complete genomes
 
 		for i in `ls Genomes`;
