@@ -8,12 +8,17 @@ Nucleic acids research 41 (7), e75-e75”
 ======INSTALL AND USAGE========
 
 1.	Compile:
+
 gcc fasta2co.c -O6 -Wall -o fasta2co ;
+
 gcc fastq2co.c -O6 -Wall -o fastq2co ;
+
 gcc co2dist2.c -O6 -Wall -o co2dist  ;
+
 gcc readco.c  -Wall -o readco ;
 
-2.	Usage :
+2.	Usage:
+
 fasta2co : Convert fasta file to co file ;
 Usage : ./fasta2co <*.fasta> <*.co>
 
