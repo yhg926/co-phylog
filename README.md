@@ -9,7 +9,7 @@ Nucleic acids research 41 (7), e75-e75”
 
 1.	Compile:
 
-gcc fasta2co.c -O6 -Wall -o fasta2co ;
+gcc fasta2co.v18.3.c -O6 -Wall -o fasta2co ;
 
 gcc fastq2co.c -O6 -Wall -o fastq2co ;
 
