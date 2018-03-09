@@ -1,0 +1,7 @@
+# binaries
+*.o
+
+co2dist2
+fasta2co
+fastq2co
+readco
