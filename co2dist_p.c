@@ -1,3 +1,4 @@
+//the paralelism is contributed by @kloetzl
 #include "comp_rvs.h"
 #include "ctxobj.h"
 #include <dirent.h>
