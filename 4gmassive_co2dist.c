@@ -22,7 +22,7 @@
 #define SCLB 10000 // for 3M # share ctx should >150K, for extreme small genome,need impose a JCLB
 #define JCLB 0.08  //shared ctx/smaller genome or jaccard index lower boundary
 
-#define HASHSIZE (BIT1MASK<<30) //(BIT1MASK<<32) // limit for largest hash size
+#define HASHSIZE (BIT1MASK<<32) //(BIT1MASK<<32) // limit for largest hash size
 //hash fuc for collision of different ctx
 #define HKN 200 // HKN is the number of sp. in the hash table
 #define HKL 2048 //up limit of species in a hashtable(2^11)
