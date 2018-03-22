@@ -1,7 +1,7 @@
 CPPFLAGS=-Wall -Wextra -std=gnu11
-CFLAGS+=-O3 -ggdb -fopenmp
+CFLAGS+=-O3 -ggdb #-fopenmp
 
-EXECUTABLES=co2dist2 co2dist_p fasta2co fastq2co readco
+EXECUTABLES=4gmassive_co2dist fasta2co fastq2co readco
 
 .DELETE_ON_ERROR:
 .PHONY: clean all format dist
