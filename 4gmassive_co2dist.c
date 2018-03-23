@@ -166,7 +166,8 @@ llong hcl=HASHSIZE ;// hash collision limited to HASHSIZE
 
 		}
 		for(int i=0;i<j;i++){
-			if ( (CTX[i] >SCLB)&& (CTX[i]/(fsize[i]+fsize[j]-CTX[i]) > JCLB ) && ((double)OBJ[i] / (double)CTX[i] < ULB) )
+			if ( (CTX[i] >SCLB)&& 
+			    ((double)CTX[i]/(fsize[i]+fsize[j]-CTX[i]) > JCLB ) && ((double)OBJ[i] / (double)CTX[i] < ULB) )
 				MAT(j, i) = MAT(i, j) = (double)OBJ[i] / (double)CTX[i];
 			else
 				MAT(j, i) = MAT(i, j) = (double)URD;
