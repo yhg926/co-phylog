@@ -122,7 +122,6 @@ int main(int argc, char *argv[])
 		while(!feof(fp)&&fread(&tuple,8,1,fp)){
 			unsigned int qpi=0,// qudratic probe i //qpi=qw
 			ind = h1((tuple&objmask)),reprobe=0;//coltype:last collission type 0,1,2
-			//0:no collision,1:different ctx(use quadratic probe),2:same ctx,different sp.(use linear probe).
 			while(CO[ind]!=0){
 				if((CO[ind]&objmask) != (tuple&objmask)){
 					qpi++;
