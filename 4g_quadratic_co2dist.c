@@ -22,13 +22,13 @@
 #define SCLB 10000 // for 3M # share ctx should >150K, for extreme small genome,need impose a JCLB
 #define JCLB 0.08  //shared ctx/smaller genome or jaccard index lower boundary
 
-#define HASHSIZE (BIT1MASK<<32) //(BIT1MASK<<32) // limit for largest hash size
+#define HASHSIZE (BIT1MASK<<30) //(BIT1MASK<<32) // limit for largest hash size
 //hash fuc for collision of different ctx
 #define HKN 200 // HKN is the number of sp. in the hash table
 #define HKL 2048 //up limit of species in a hashtable(2^11)
 #define h1(k) ((k)%(HASHSIZE)) 
 #define h2(i) (i*(i+1)/2) // i > HKN^(1/2) ,i=21
-//#define hs(k,i) ((h1(k) + h2(i)) % HASHSIZE)
+#define hs(k,i) ((h1(k) + h2(i)) % HASHSIZE)
 //hash fuc for collision of same ctx in different sp.(linear proble)
 //#define hg(k,i) ((h1(k) + i) % HASHSIZE) // i start for 0
 static llong objmask = OBJMASK;
@@ -127,21 +127,16 @@ llong hcl=HASHSIZE ;// hash collision limited to HASHSIZE
 //quadratic proble i from 1 or pw?
 		while(!feof(fp)&&fread(&tuple,8,1,fp)){
 			unsigned int qpi=0,// qudratic probe i //qpi=qw
-			ind = h1((tuple&objmask)),reprobe=0;//coltype:last collission type 0,1,2
+			ind = hs((tuple&objmask),qpi),reprobe=0;//coltype:last collission type 0,1,2
 			//0:no collision,1:different ctx(use quadratic probe),2:same ctx,different sp.(use linear probe).
 			while(CO[ind]!=0){
-				if((CO[ind]&objmask) != (tuple&objmask)){
-					qpi++;
-					ind=(ind+h2(qpi))%HASHSIZE ;//hs(tuple&objmask,qpi); //quadratic probe
-				}
-				else{ //CO[ind]&obmask) == (tuple&objmask)
+				if((CO[ind]&objmask) == (tuple&objmask)){
 					CTX[CO[ind]>>HSPB]++;
 					if((CO[ind]&tupmask) != tuple)
 						OBJ[CO[ind]>>HSPB]++;
-
-					ind++;
-					ind=(ind)%HASHSIZE ;// hg(tuple&objmask,offset); //linear probe
 				}
+                qpi++;
+				ind = hs((tuple&objmask),qpi);
 				reprobe++;
 				if (reprobe > hcl)
 					err(errno,"#reprobe > hcl");
@@ -150,16 +145,10 @@ llong hcl=HASHSIZE ;// hash collision limited to HASHSIZE
 		}
 		//----------------hash end----------------------//
 		for(int i=0;i<j;i++){
-<<<<<<< HEAD
 //!!!CTX[i]/(fsize[i]+fsize[j]-CTX[i]) == 0,make sure convert to double before compare division with a flot 
 			if ( (CTX[i] >SCLB)&& ((double)CTX[i]/(fsize[i]+fsize[j]-CTX[i]) > JCLB ) 
 			&& ((double)OBJ[i] / (double)CTX[i] < ULB) )
 				MAT(j, i) = MAT(i, j) = (double)OBJ[i] / CTX[i];
-=======
-			if ( (CTX[i] >SCLB)&& 
-			    ((double)CTX[i]/(fsize[i]+fsize[j]-CTX[i]) > JCLB ) && ((double)OBJ[i] / (double)CTX[i] < ULB) )
-				MAT(j, i) = MAT(i, j) = (double)OBJ[i] / (double)CTX[i];
->>>>>>> 9b77260dd8c2c12b2febaef30e9d7e525eb5f317
 			else
 				MAT(j, i) = MAT(i, j) = (double)URD;
 		}

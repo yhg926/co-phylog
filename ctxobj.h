@@ -9,7 +9,8 @@
 #define _64MASK 0xffffffffffffffffLLU
 #define TUPMASK (_64MASK >> (64-BITTL))
 #define BIT1MASK 0x0000000000000001LLU
-#define OBJMASK (TUPMASK^(3LLU << CTXLEN))
+#define CTXMASK (3LLU << CTXLEN)
+#define OBJMASK (TUPMASK^CTXMASK)
 #define LF 0.5             //load factor
 
 #define LINEARPROBE 1
