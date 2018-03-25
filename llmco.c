@@ -26,7 +26,7 @@
 #define SCLB 1000 // for 3M # share ctx should >150K, for extreme small genome,need impose a JCLB
 #define JCLB 0.08  //shared ctx/smaller genome or jaccard index lower boundary
 //the optimized hash methods and parametors were chose here based on a test on 358 Salmonella genomes(20180323)
-#define HASHSIZE 40000003 //a prime 
+#define HASHSIZE 400000009 //a prime 400000009
 #define NLF 0.5 
 #define h1(k) ((k)%(HASHSIZE)) 
 #define h2(k) (1+((k)%(HASHSIZE-1)))
@@ -35,12 +35,15 @@
 #define GCB 6 //genome code bits GCB=BTS*8-2
 #define HKL 64 //maximum #sp. allowed in a hashtable,HKL = 2^GCB 
 #define OBJAR 16 //obj array size
+#define SHIFT_GC 52 //high 64-HSPB bits for genome code
+#define SHIFT_MOBJ 40 //for count of other genmes match this ctx
+
 static llong objmask = OBJMASK;
 //static llong tupmask =TUPMASK;
 static llong ctxmask = CTXMASK;
 typedef struct objs{char gcobj[OBJAR]; struct objs *next;} objs_t; //gcobj[i]:genomecode:6bits,obj:2bits
-struct entry {llong otherobj:12;llong gc:12;llong key:40; objs_t *new;} entry;
-
+struct entry {llong key; objs_t *new;} entry;
+//key bits: genome_code|ctxcount|kmer:  12|12|40
 void help(int exit_code)
 {
 	static const char str[] = "Usage: llmcodist DIR\n";
@@ -97,15 +100,13 @@ int main(int argc, char *argv[])
 	struct entry *CO = malloc(HASHSIZE*sizeof(*CO));
     //initial CO
     for(unsigned int i=0;i<HASHSIZE;i++){
-        CO[i].key=0;
-        CO[i].otherobj=0;
+        CO[i].key=0LLU;
         //CO[i].gc=0; //genome code
     }
 	if (!CO) err(errno, "oom");
 	double *matrix = malloc(n * n * sizeof(*matrix));
 	if (!matrix) err(errno, "oom");
 #define MAT(X, Y) (matrix[(X)*n + (Y)])
-#define HSPB 52 //high 64-HSPB bits for species code
    // llong gcu = 1LLU << HSPB; // genome count unit
 	llong hcl=HASHSIZE, keycount=0 ;// hash collision limited to HASHSIZE
 	int j;
@@ -116,7 +117,8 @@ int main(int argc, char *argv[])
 		unsigned int *OBJ=calloc(j,sizeof(*OBJ));
 		//unsigned int OBJ[j]={0};
 		llong tuple=0LLU;
-	//	llong spc=(llong)j << HSPB; // 52 default 
+		llong mobju=1LLU<<SHIFT_MOBJ; //one obj unit; 
+		llong gc=(llong)j << SHIFT_GC; // 52 default 
 		char fullname[512] = {0};
 		snprintf(fullname, 512, "%s/%s", dirpath, cofile[j]);
 		FILE *fp = fopen(fullname, "rb");
@@ -134,19 +136,18 @@ int main(int argc, char *argv[])
             for(qpi=0;qpi<hcl;qpi++){
                 ind=h((tuple&objmask),qpi);
                 if(CO[ind].key==0){
-                    CO[ind].key=tuple;
-                    CO[ind].gc=j;
+                    CO[ind].key=gc|tuple;
                     break;
                 }
                 else if ( (CO[ind].key&objmask) == (tuple&objmask) ) {
-                    CTX[CO[ind].gc]++;
+                    CTX[CO[ind].key>>SHIFT_GC]++;
                     if( CO[ind].key != tuple ) //make sure key is 40bits
-                        OBJ[CO[ind].gc]++;
-                    CO[ind].otherobj++; //increase 1,but alway the total copies of the ctx - 1
-                    unsigned int moreobjc= CO[ind].otherobj,
+                        OBJ[CO[ind].key>>SHIFT_GC]++;
+                    CO[ind].key=+mobju; //increase 1,but alway the total copies of the ctx - 1
+                    unsigned int moreobjc= (CO[ind].key<<12) >>SHIFT_MOBJ, //make sure 64-SHIFT_GC==12
                     mod=moreobjc%OBJAR,
-                    rd=(int)(moreobjc/OBJAR);
-                    char nobj = (tuple&ctxmask >> CTXLEN)%4; //char type only for HKL<64 otherwise use short
+                    rd=(unsigned int)(moreobjc/OBJAR);
+                    unsigned char nobj = (tuple&ctxmask >> CTXLEN)%4; //char type only for HKL<64 otherwise use short
                     objs_t *tmp ;
                     if (mod==1){
                         tmp = malloc(sizeof(objs_t));
@@ -155,7 +156,7 @@ int main(int argc, char *argv[])
                         CO[ind].new=tmp;
                         CO[ind].new->gcobj[0]=(j<<2)+nobj;                       
                     }
-                    char it;   //
+                    unsigned char it;   //
                     for(unsigned int i=0;i<mod-1;i++){
                         it=CO[ind].new->gcobj[i];
                         CTX[it>>2]++;
@@ -163,7 +164,7 @@ int main(int argc, char *argv[])
                     }
                     tmp=CO[ind].new->next;
                     CO[ind].new->gcobj[mod-1]=(j<<2)+nobj;
-                    for(unsigned blk=0;blk<rd;blk++){
+                    for(unsigned int blk=0;blk<rd;blk++){
                         for(int i=0;i<OBJAR;i++){
                             it=tmp->gcobj[i];
                             CTX[it>>2]++;
