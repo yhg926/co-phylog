@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 		}
 	}
 	closedir(dh);
-	printf("loading %d .co files:\n",n);
+	printf("loading less than %d .co files:\n",n);
 	struct entry *CO = malloc(HASHSIZE*sizeof(*CO));
     //initial CO
     for(unsigned int i=0;i<HASHSIZE;i++){
@@ -108,7 +108,8 @@ int main(int argc, char *argv[])
 #define HSPB 52 //high 64-HSPB bits for species code
    // llong gcu = 1LLU << HSPB; // genome count unit
 	llong hcl=HASHSIZE, keycount=0 ;// hash collision limited to HASHSIZE
-	for (int j = 0; (j < n) && (keycount < HASHSIZE*NLF); j++) { //n should == HKL
+	int j;
+	for (j = 0; (j < n) && (keycount < HASHSIZE*NLF); j++) { //n should == HKL
 		MAT(j, j) = 0.0;
 		//tmp arr for ctx,obj;
 		unsigned int *CTX=calloc(j,sizeof(*CTX));
@@ -182,6 +183,7 @@ int main(int argc, char *argv[])
 		}
 		fclose(fp);
 	}
+	printf("total %d files loaded\n",j);
         //free CO
         objs_t* tmp;
         for (unsigned int i=0;i<HASHSIZE;i++){
