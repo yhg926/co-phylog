@@ -1,4 +1,4 @@
-/* *************************massive-co.v18_323***************************************
+/* *************************massive-co using linked list***************************************
 // highly parallelable pairwise co-distances computing method using linked list 
 // (need only < 1G memory per hashtable for about 64 genomes)
 //                  contact: yhg926@gmail.com  
