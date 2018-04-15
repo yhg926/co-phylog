@@ -27,14 +27,14 @@
 #define SCLB 1000 // for 3M # share ctx should >150K, for extreme small genome,need impose a JCLB
 #define JCLB 0.08  //shared ctx/smaller genome or jaccard index lower boundary
 //the optimized hash methods and parametors were chose here based on a test on 358 Salmonella genomes(20180323)
-#define HASHSIZE 400000009 //a prime 400000009
+#define HASHSIZE 3500000009//400000009 //a prime 400000009
 #define NLF 0.5 
 #define h1(k) ((k)%(HASHSIZE)) 
 #define h2(k) (1+((k)%(HASHSIZE-1)))
 #define h(k,i) ((h1(k) + i * h2(k))%HASHSIZE)//test: much faster than h(k,i)=(h1(k)+i(i+1)/2)%HASHSIZE
 //#define BTS 2  //bytes store SP.count+obj(2bits)
 #define GCB 12 //genome code bits GCB=BTS*8-2
-#define HKL 2048 //maximum #sp. allowed in a hashtable,HKL = 2^GCB 
+#define HKL 4096 //maximum #sp. allowed in a hashtable,HKL = 2^GCB 
 #define OBJAR 32 //16 obj array size
 #define SHIFT_GC 52 //high 64-HSPB bits for genome code
 #define SHIFT_MOBJ 40 //for count of other genmes match this ctx
