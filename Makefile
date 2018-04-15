@@ -1,7 +1,7 @@
-CPPFLAGS=-Wall -Wextra -std=gnu11
-CFLAGS+=-O3 -ggdb #-fopenmp
+CPPFLAGS=-Wall -Wextra -std=gnu11 
+CFLAGS+=-O3 -ggdb -fopenmp -L/home/yhg/bin/lib/lib -ltcmalloc 
 
-EXECUTABLES=llmco fasta2co fastq2co readco
+EXECUTABLES=files.mthrd.short.llmco infile.mthrd.short.llmco mthrd.short.llmco g2048_llmco co2dist_p co2dist2
 
 .DELETE_ON_ERROR:
 .PHONY: clean all format dist
