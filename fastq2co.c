@@ -30,7 +30,9 @@
 #define SRA_HIGHSTD 82 //72 //'H'
 #define ILL_LOWSTD 84
 #define ILL_HIGHSTD 104
-#define HASHSIZE 20000081 //320001293*2 // 40000003 //20000081*2 //default hashsize
+#ifndef HASHSIZE
+	#define HASHSIZE 20000081 //320001293*2 // 40000003 //20000081*2 //default hashsize
+#endif
 #define HLF 0.7 //up limit of loadfacor
 #define CONFLITBIT 0x8000000000000000LLU     //HIBITSET1 0x8000000000000000LL
 #define QBITSET1   0x4000000000000000LLU //set qualified tuple this bit 1

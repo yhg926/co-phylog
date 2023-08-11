@@ -11,7 +11,9 @@
 #include "basemap.h"
 #include "comp_rvs.h"
 #define HIBITSET1 0x8000000000000000LLU
-#define HASHSIZE 40000003 
+#ifndef HASHSIZE
+#define HASHSIZE 40000003
+#endif  
 #define h1(k) ((k)%(HASHSIZE)) 
 #define h2(k) (1+((k)%(HASHSIZE-1)))
 #define h(k,i) ((h1(k) + i * h2(k))%HASHSIZE)

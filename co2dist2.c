@@ -28,7 +28,9 @@
 #include <time.h>
 #include "ctxobj.h"
 #include "comp_rvs.h"
-#define HASHSIZE 20000081 //40000161 //20000081*2 //default hashsize
+#ifndef HASHSIZE
+	#define HASHSIZE 40000003  //40000161 //20000081*2 //default hashsize
+#endif
 #define h1(k) ((k)%(HASHSIZE)) 
 #define h2(k) (1+((k)%(HASHSIZE-1)))
 #define h(k,i) ((h1(k) + i * h2(k))%HASHSIZE)
