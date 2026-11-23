@@ -1,0 +1,26 @@
+name: Benchmark build and tests
+on:
+  push:
+    branches: [benchmark-qc]
+    tags: ['v*-benchmark.*']
+  pull_request:
+    paths: ['benchmark/**', '.github/workflows/benchmark.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        configuration: [default, external-flags, sanitizer]
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      - name: Build and test
+        env:
+          CONFIGURATION: ${{ matrix.configuration }}
+        run: |
+          case "$CONFIGURATION" in
+            default) make -C benchmark test ;;
+            external-flags) make -C benchmark CFLAGS='-O2 -Werror' test ;;
+            sanitizer) make -C benchmark sanitize ;;
+          esac

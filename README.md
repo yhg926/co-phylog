@@ -1,5 +1,13 @@
 #co-phylog tools set
 
+## Opt-in benchmark version
+
+The historical programs below remain unchanged. For a versioned benchmark build
+with configurable base-quality and minimum-occurrence filters, 31-base default
+windows, dynamically sized FASTQ input, gzip support and regression tests, see
+[benchmark/README.md](benchmark/README.md). Build it with `make -C benchmark`;
+its binaries are written to `benchmark/bin/`, not over the historical programs.
+
 Please cite:
 “Co-phylog: an assembly-free phylogenomic approach for closely related organisms
 H Yi, L Jin
